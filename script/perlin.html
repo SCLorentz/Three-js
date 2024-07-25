@@ -1,0 +1,34 @@
+<html>
+<head>
+<script src='perlin.js'></script>
+</head>
+<body>
+<canvas id='cnvs'></canvas>
+<script>
+'use strict';
+let cnvs = document.getElementById('cnvs');
+cnvs.width = cnvs.height = 512;
+let ctx = cnvs.getContext('2d');
+
+const GRID_SIZE = 4;
+const RESOLUTION = 128;
+const COLOR_SCALE = 250;
+
+let pixel_size = cnvs.width / RESOLUTION;
+let num_pixels = GRID_SIZE / RESOLUTION;
+
+for (let y = 0; y < GRID_SIZE; y += num_pixels / GRID_SIZE){
+    for (let x = 0; x < GRID_SIZE; x += num_pixels / GRID_SIZE){
+        let v = parseInt(perlin.get(x, y) * COLOR_SCALE);
+        ctx.fillStyle = 'hsl('+v+',50%,50%)';
+        ctx.fillRect(
+            x / GRID_SIZE * cnvs.width,
+            y / GRID_SIZE * cnvs.width,
+            pixel_size,
+            pixel_size
+        );
+    }
+}
+</script>
+</body>
+</html>
