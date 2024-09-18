@@ -125,11 +125,11 @@ function updatePlayerSphere() {
 }
 
 // Adicione os eventos de escuta para as teclas pressionadas
-document.addEventListener('keydown', function (event) {
+document.addEventListener('keydown', (event) => {
     // o codigo antigo ainda tem uma vantagem que eu posso prever, não posso testar agora pois estou em aula e no editor default do github
     // mas é possivel de prever que o personagem só será capaz de se mover para uma direção de cada vez.
     // Ou seja, tentar se mover para a direita e frente ao mesmo tempo não fará o player andar na diagonal, mas sim somente para frente
-    moviment[event.keycode]()?
+    moviment[event.keycode]?.();
 /*switch (event.keyCode) {
     case 87: // Tecla W
     moveForward = true;

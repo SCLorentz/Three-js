@@ -1,0 +1,27 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/alpine
+{
+	"name": "three-js",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"build": {
+        "dockerfile": "Dockerfile"
+    },
+    //"image": "Dockerfile",
+    "runArgs": [
+        "--cap-add=SYS_PTRACE",
+        "--security-opt",
+        "seccomp=unconfined"
+    ],
+	"customizations": {
+		"vscode": {
+			// preinstalled extensions for vscode
+			"extensions": [
+				"eamodio.gitlens",
+				"seepine.md-editor",
+				"PKief.material-icon-theme",
+				"kisstkondoros.vscode-gutter-preview",
+				"mhutchie.git-graph"
+			]
+		}
+	}
+}

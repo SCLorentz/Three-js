@@ -1,4 +1,4 @@
-import * as THREE from './node_modules/three/build/three.module.js';
+import * as THREE from '../../../node_modules/three/build/three.module.js';
 //import { FilmShader } from './three/examples/jsm/shaders/FilmShader.js';
 
 var scene = new THREE.Scene();
