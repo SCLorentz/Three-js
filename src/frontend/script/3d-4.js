@@ -1,3 +1,4 @@
+// why, why, WHY?
 // Crie uma cena
 var scene = new THREE.Scene();
 

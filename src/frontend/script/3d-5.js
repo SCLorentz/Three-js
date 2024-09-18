@@ -1,28 +1,26 @@
-var isChunkCreated = false;
-
-var scene = new THREE.Scene();
-
-const size = 8;
-const divisions = 8;
-const colorCenterLine = new THREE.Color(0x0000ff);
-const colorGrid = new THREE.Color(0x808080);
-const gridHelper = new THREE.GridHelper(size, divisions, colorCenterLine, colorGrid);
+const isChunkCreated = false,
+     scene = new THREE.Scene(),
+     size = 8,
+     divisions = 8,
+     colorCenterLine = new THREE.Color(0x0000ff),
+     colorGrid = new THREE.Color(0x808080),
+     gridHelper = new THREE.GridHelper(size, divisions, colorCenterLine, colorGrid);
+// there should be a better way to do this
 gridHelper.name = 'grid'
 for (let x = 0; x < 64; x += 8) {
     for (let z = 0; z < 64; z += 8) {
-        var clonedObject2 = gridHelper.clone();
+        const clonedObject2 = gridHelper.clone();
         clonedObject2.position.set(gridHelper.position.x + x, 0, gridHelper.position.z + z)
         scene.add(clonedObject2);
     }
 }
 
-var material = new THREE.MeshPhongMaterial();
-var textureLoader = new THREE.TextureLoader();
-var texture = textureLoader.load('https://static.wikia.nocookie.net/minecraft_gamepedia/images/a/a7/Cobblestone_%28texture%29_JE5_BE3.png');
-
-const CHUNK_SIZE = 16;
-const TEXTURE_COLUMNS = 16;
-const TEXTURE_ROWS = 16;
+const material = new THREE.MeshPhongMaterial(),
+     textureLoader = new THREE.TextureLoader(),
+     texture = textureLoader.load('https://static.wikia.nocookie.net/minecraft_gamepedia/images/a/a7/Cobblestone_%28texture%29_JE5_BE3.png'),
+     CHUNK_SIZE = 16,
+     TEXTURE_COLUMNS = 16,
+     TEXTURE_ROWS = 16;
 
 class Chunk {
     constructor() {
@@ -34,19 +32,19 @@ class Chunk {
         this.blocks[x + y * this.chunkSize + z * this.chunkSize * this.chunkSize] = type;
     }
     generateMesh() {
-        const geometry = new THREE.BufferGeometry();
-        const material = new THREE.MeshPhongMaterial({ map: texture, side: THREE.FrontSide });
-
-        const vertices = [];
-        const uv = [];
-        const indices = [];
+        const geometry = new THREE.BufferGeometry(),
+             material = new THREE.MeshPhongMaterial({ map: texture, side: THREE.FrontSide }),
+             //
+             vertices = [],
+             uv = [],
+             indices = [];
 
         // Preencha as coordenadas dos vértices, coordenadas UV e índices conforme necessário
         // Exemplo de preenchimento de vértices, coordenadas UV e índices para um cubo:
         for (let i = 0; i < 8; i++) {
-            const x = i & 1 ? 1 : -1;
-            const y = i & 2 ? 1 : -1;
-            const z = i & 4 ? 1 : -1;
+            const x = i & 1 ? 1 : -1,
+                 y = i & 2 ? 1 : -1,
+                 z = i & 4 ? 1 : -1;
 
             vertices.push(x, y, z);
             uv.push(0, 0); // Substitua por coordenadas UV reais
@@ -58,6 +56,7 @@ class Chunk {
 
         // Defina os índices para renderização
         // Exemplo de definição de índices para renderizar um cubo:
+        // wtf is this?
         const cubeIndices = [
             0, 1, 2, 2, 3, 0, // Face frontal
             4, 5, 6, 6, 7, 4, // Face traseira
@@ -69,9 +68,9 @@ class Chunk {
 
         geometry.setIndex(cubeIndices);
 
-        const types = [];
-        const indicesArray = new Uint32Array(indices);
-        const typesArray = new Uint8Array(types);
+        const types = [],
+            indicesArray = new Uint32Array(indices),
+            typesArray = new Uint8Array(types);
 
         geometry.setIndex(new THREE.BufferAttribute(indicesArray, 1));
         geometry.setAttribute('type', new THREE.BufferAttribute(typesArray, 1));
@@ -80,6 +79,7 @@ class Chunk {
         this.mesh.castShadow = true;
         this.mesh.receiveShadow = true;
         isChunkCreated = true;
+        //
         return this.mesh;
     }
 }
@@ -90,44 +90,45 @@ chunk.generateMesh();
 
 scene.add(gridHelper);
 
-var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.z = 0;
 camera.position.y = 1;
 
-var spherical = new THREE.Spherical();
+const spherical = new THREE.Spherical();
 spherical.setFromVector3(camera.position);
-var playerSphere = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), material);
+const playerSphere = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), material);
 playerSphere.name = "player";
 scene.add(playerSphere);
 
-var cameraParent = new THREE.Object3D();
+const cameraParent = new THREE.Object3D();
 playerSphere.add(cameraParent);
 
 cameraParent.add(camera);
 
 function onMouseMove(event) {
-    const movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
-    const movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
-    const rotationSpeed = 0.002;
+    const movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0,
+         movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0,
+         rotationSpeed = 0.002;
+    //
     playerSphere.rotation.y -= movementX * rotationSpeed;
     camera.rotation.x -= movementY * rotationSpeed;
     camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
 }
 window.addEventListener('mousemove', onMouseMove, false);
 
-var movementSpeed = 0.15;
-var moveForward = false;
-var moveBackward = false;
-var moveLeft = false;
-var moveRight = false;
-var moveUp = false;
-var moveDown = false;
-
-var rotationSpeed = 0.01;
-var mouseSpeed = 0.002;
+const movementSpeed = 0.15,
+    moveForward = false,
+    moveBackward = false,
+    moveLeft = false,
+    moveRight = false,
+    moveUp = false,
+    moveDown = false,
+    rotationSpeed = 0.01,
+    mouseSpeed = 0.002;
 
 function updatePlayerSphere() {
-    var direction = new THREE.Vector3();
+    const direction = new THREE.Vector3();
+    // fuck this code
     if (moveForward) {
         camera.getWorldDirection(direction);
         direction.y = 0;
@@ -144,14 +145,14 @@ function updatePlayerSphere() {
         camera.getWorldDirection(direction);
         direction.y = 0;
         direction.normalize();
-        var left = new THREE.Vector3(-direction.z, 0, direction.x);
+        const left = new THREE.Vector3(-direction.z, 0, direction.x);
         playerSphere.position.add(left.multiplyScalar(movementSpeed));
     }
     if (moveLeft) {
         camera.getWorldDirection(direction);
         direction.y = 0;
         direction.normalize();
-        var right = new THREE.Vector3(direction.z, 0, -direction.x);
+        const right = new THREE.Vector3(direction.z, 0, -direction.x);
         playerSphere.position.add(right.multiplyScalar(movementSpeed));
     }
     if (moveUp) {
@@ -163,6 +164,7 @@ function updatePlayerSphere() {
 }
 
 document.addEventListener('keydown', function (event) {
+    // nope, forget it
     switch (event.keyCode) {
         case 87: // Tecla W
         moveForward = true;
@@ -213,21 +215,22 @@ const SAMPLE_SIZE = 50;
 centerMouse();
 
 function centerMouse() {
-    var centerX = window.innerWidth / 2;
-    var centerY = window.innerHeight / 2;
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    //
     window.dispatchEvent(new MouseEvent('mousemove', {
         clientX: centerX,
         clientY: centerY
     }));
 }
 
-var renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x00Afff);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.VSMShadowMap;
 renderer.localClippingEnabled = true;
-var canvas = renderer.domElement;
+const canvas = renderer.domElement;
 document.body.appendChild(renderer.domElement);
 
 window.addEventListener('keydown', function () {
@@ -235,7 +238,7 @@ window.addEventListener('keydown', function () {
     canvas.requestPointerLock();
 });
 
-var light = new THREE.DirectionalLight(0xffffff, 1);
+const light = new THREE.DirectionalLight(0xffffff, 1);
 light.position.set(20, 50, 2);
 scene.add(light);
 
@@ -253,12 +256,12 @@ function animate() {
 }
 animate();
 
-var canvas2d = document.getElementById('canvas2d');
-var context2d = canvas2d.getContext('2d');
+const canvas2d = document.getElementById('canvas2d');
+const context2d = canvas2d.getContext('2d');
 canvas2d.width = window.innerWidth;
 canvas2d.height = window.innerHeight;
-var centerX = canvas2d.width / 2;
-var centerY = canvas2d.height / 2;
+const centerX = canvas2d.width / 2;
+const centerY = canvas2d.height / 2;
 
 context2d.beginPath();
 context2d.moveTo(centerX - 10, centerY);
@@ -268,3 +271,5 @@ context2d.lineTo(centerX, centerY + 10);
 context2d.strokeStyle = 'white';
 context2d.lineWidth = 2;
 context2d.stroke();
+
+// It would be better to create something from scratch, realy
